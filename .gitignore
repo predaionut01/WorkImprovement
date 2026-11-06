@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# pipeline conversation store (local PoC)
+.data/
+
+# keep the documented example env
+!.env.example

@@ -1,26 +1,91 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Home'Bank-like light theme. PoC only, no real brand assets. */
+@theme {
+  --color-ing-orange: #ff6200;
+  --color-ing-orange-dark: #e05600;
+  --color-ing-orange-soft: #fff1e8;
+  --color-ink: #333333;
+  --color-ink-muted: #6b6b6b;
+  --color-ink-faint: #9a9a9a;
+  --color-surface: #f5f5f5;
+  --color-surface-2: #ececec;
+  --color-line: #e3e3e3;
+  --color-success: #2e8b57;
+  --color-success-soft: #e6f4ec;
+  --color-danger: #d0021b;
+  --color-danger-soft: #fdecee;
+  --color-warning: #d98c00;
+  --color-warning-soft: #fff5e0;
+  --color-info: #2f6fed;
+  --color-info-soft: #e9f0ff;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius-card: 12px;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.05);
+  --animate-spin-slow: spin 1.2s linear infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #ffd3b8;
+}
+
+/* thin scrollbars inside panels */
+.hb-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.hb-scroll::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 8px;
+}
+.hb-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@keyframes hb-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.hb-pop {
+  animation: hb-pop 160ms ease-out;
+}
+
+@keyframes hb-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+.hb-caret {
+  display: inline-block;
+  width: 6px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: currentColor;
+  animation: hb-blink 0.9s steps(1) infinite;
+}
+
+input[type="range"] {
+  accent-color: #ff6200;
 }
