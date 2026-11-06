@@ -111,8 +111,33 @@ apar în `/ops`.
 5. `/ops`: store, judges, metrici
 6. Scenariile demo + script de prezentare
 
+## Maparea pe Dialogflow CX (platforma reală a băncii)
+
+PoC-ul joacă rolul stratului „VA API” din fața Dialogflow CX: orchestrare,
+pseudonimizare, guardrails, store și evaluare sunt ale noastre; conversația
+generativă e a Dialogflow (cu Gemini în spate).
+
+| Pas PoC | În Dialogflow CX |
+|---|---|
+| 1 Input guard | Pre-procesare în VA API (pseudonimizarea e a noastră) + prompt security / banned phrases în CX |
+| 2 Router | Default Start Flow cu intent routes + rutare către Playbooks; local îl simulăm |
+| 3 Context | Playbook **Tools** (OpenAPI către Context Service) sau webhook fulfillment; GENERAL_QA → **Data Stores** |
+| 4 Prompt | Goal + instructions ale Playbook-ului (textul nostru de system prompt) |
+| 5 Inferență | Funcțiile generative CX, modelul Gemini ales în setările agentului |
+| 6 Output guard | Post-procesare în VA API + response safety în CX |
+| 7 Livrare | Flows/pages deterministe, cu pagină de confirmare pentru acțiuni |
+| 8 Store + Eval | Export conversații (BigQuery) + judges-ii noștri |
+
+Endpoint-uri pe care Dialogflow le poate apela în PoC: `POST /api/tools/webhook`
+(format webhook CX), `GET /api/tools/context`, `GET /api/tools/openapi.json`
+(de lipit ca Tool în consola CX), `POST /api/tools/actions/card-block`.
+
+Provider chain în gateway: `dialogflow → gemini-pro → gemini-flash → dev-http
+(hook neutru, doar dezvoltare locală) → template (offline)`. Repo-ul conține
+exclusiv Google; nicio dependență de alt furnizor.
+
 ## De decis înainte de start
 
 - Stack: Next.js + TypeScript (recomandat: frontend și API în același proiect)
-- LLM: Claude API pentru model mare și router; al doilea provider pentru fallback
+- LLM: Dialogflow CX ca platformă conversațională; Gemini pe Vertex AI pentru router/judges și rezervă
 - Limba chat-ului: română, cu engleză ca secundar
